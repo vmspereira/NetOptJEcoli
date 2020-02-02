@@ -10,6 +10,7 @@ import jecoli.algorithm.components.representation.IRepresentation;
 import jecoli.algorithm.components.solution.ISolution;
 import jecoli.algorithm.components.solution.ISolutionSet;
 import jecoli.algorithm.multiobjective.archive.aggregation.IAggregationFunction;
+import jecoli.SystemConf;
 
 public abstract class AbstractMultiobjectiveEvaluationFunction<T extends IRepresentation>
 		implements IEvaluationFunction<T> {
@@ -24,7 +25,7 @@ public abstract class AbstractMultiobjectiveEvaluationFunction<T extends IRepres
 	/** use multiprocessing **/
 	protected boolean mp = true;
 	/** By default use half of the available processors **/
-	protected int n_threads = Runtime.getRuntime().availableProcessors()/2;
+	protected int n_threads = SystemConf.getPropertyInt("multithread.nmp", Runtime.getRuntime().availableProcessors()/2);
 	protected List<ComputeUnit> workers = null;
 
 	protected List<IEvaluationFunctionListener<T>> listeners = null;
@@ -62,6 +63,20 @@ public abstract class AbstractMultiobjectiveEvaluationFunction<T extends IRepres
 		if (listeners != null && !listeners.isEmpty())
 			notifyEvaluationFunctionListeners(EvaluationFunctionEvent.SOLUTIONSET_EVALUATION_EVENT,
 					String.valueOf(solutionSet.getNumberOfSolutions()), solutionSet);
+	}
+	
+	public boolean isMPEnable(){
+		boolean enabled = false;
+		if(this.mp){
+			try {
+				IEvaluationFunction<T> evaluator=this.deepCopy();
+				if(evaluator!=null)
+					enabled = true;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return enabled;
 	}
 
 	private void evaluateMP(ISolutionSet<T> solutionSet) throws Exception {
