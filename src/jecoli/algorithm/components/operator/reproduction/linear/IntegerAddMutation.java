@@ -82,17 +82,15 @@ public class IntegerAddMutation extends AbstractMutationOperator<ILinearRepresen
 			int minValue = ((IntegerRepresentationFactory)solutionFactory).getLowerBoundGeneLimitList().get(pos);
 			
 			int value=childGenome.getElementAt(pos);
-			if( randomNumberGenerator.nextDouble() > 0.5) 
+		
 			if( randomNumberGenerator.nextDouble() > 0.5) 
 			{	
 				value++;
-				if(value>maxValue)
-					value = minValue;
+				if(value>maxValue) value = minValue;
 			}
 			else{
 				value--;
-				if(value<minValue)
-					value = maxValue;
+				if(value<minValue) value = maxValue;
 			}
 			childGenome.setElement(pos,value);
 		}	
