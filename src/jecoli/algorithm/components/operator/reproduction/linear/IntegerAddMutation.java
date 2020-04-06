@@ -83,14 +83,18 @@ public class IntegerAddMutation extends AbstractMutationOperator<ILinearRepresen
 			
 			int value=childGenome.getElementAt(pos);
 			if( randomNumberGenerator.nextDouble() > 0.5) 
+			if( randomNumberGenerator.nextDouble() > 0.5) 
 			{	
 				value++;
+				if(value>maxValue)
+					value = minValue;
 			}
 			else{
 				value--;
+				if(value<minValue)
+					value = maxValue;
 			}
-			if(maxValue-minValue>0) // a gene can be set to constant?
-			childGenome.setElement(pos, value % (maxValue-minValue+1) + minValue);	
+			childGenome.setElement(pos,value);
 		}	
 	}
 
